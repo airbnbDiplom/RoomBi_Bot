@@ -7,9 +7,7 @@ const bot = new TelegramBot(process.env.TG_TOKEN, {
     port: process.env.PORT,
   },
 });
-bot.setWebHook(
-  `https://tg-bot-node-webhook.onrender.com/bot${process.env.TG_TOKEN}`
-);
+bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
 bot.setMyCommands([
   { command: "/hello", description: "Привет" },
   { command: "/what_is_your_name", description: "Как вас зовут" },
