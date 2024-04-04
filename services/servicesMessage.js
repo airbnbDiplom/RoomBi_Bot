@@ -1,6 +1,5 @@
 import { inlineKeyboardMenu } from "../button.js";
 import { fetchStart } from "./dbServuce.js";
-// import mongo from "../mongodb/mongodb.js";
 
 export async function myMessage(msg, bot) {
   const text = msg.text;
@@ -48,12 +47,6 @@ export async function myMessage(msg, bot) {
         },
       }
     );
-    console.log("mongo - ", mongo.db().databaseName);
-    console.log("msg - ", msg);
-    let user = await fetchUser(msg.chat);
-    // const data = { id: user.id, count: user.count ? ++user.count : 1 };
-    // user = await fetchUser(data);
-    // await bot.sendMessage(chatId, mongo.db().databaseName);
   }
 }
 
