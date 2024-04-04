@@ -6,13 +6,11 @@ import { myCallbackQuery } from "./services/callbackService.js";
 dotenv.config();
 const bot = new TelegramBot(process.env.TG_TOKEN, {
   webHook: {
-    port: 80,
-    // port: process.env.PORT,
+    // port: 80,
+    port: process.env.PORT,
   },
 });
-bot.setWebHook(
-  `https://88a0-195-230-115-58.ngrok-free.app/bot${process.env.TG_TOKEN}`
-);
+bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
 bot.setMyCommands(COMMANDS);
 
 bot.on("callback_query", async (query) => {
