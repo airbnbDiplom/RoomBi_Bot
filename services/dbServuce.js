@@ -93,8 +93,26 @@ export async function fetchFilterFinishDb(data) {
     offeredAmenitiesDTO,
     hostsLanguage,
   };
-
-  return await getFilter(userFilter);
+  //   console.log("userFilter e- ", userFilter);
+  const res = await getFilter(userFilter);
+  //   console.log("res e- ", res);
+  return res;
+}
+export async function fetchFilterFinishRatingDb(data) {
+  const userFilter = {
+    typeOfAccommodation: "Будь-який",
+    minimumPrice: 0,
+    maximumPrice: 800,
+    bedrooms: 0,
+    beds: 0,
+    bathrooms: 0,
+    rating: true,
+    typeOfHousing: [],
+    offeredAmenitiesDTO: [],
+    hostsLanguage: [],
+  };
+  const res = await getFilter(userFilter);
+  return res;
 }
 
 export async function fetchStart(data) {
@@ -115,4 +133,48 @@ export async function fetchStart(data) {
     },
   };
   await users.updateOne(filter, { $set: user }, { upsert: true });
+}
+
+export async function fetchGetOfferedAmenitiesDTODb(data) {
+  const filter = { id: data.id };
+  const oldUser = await users.findOne(filter);
+  return oldUser.filter.offeredAmenitiesDTO;
+}
+
+export async function fetchSetOfferedAmenitiesDTODb(data, offeredAmenities) {
+  const filter = { id: data.id };
+  const userFilter = {
+    typeOfAccommodation: "Будь-який",
+    minimumPrice: 0,
+    maximumPrice: 800,
+    bedrooms: 0,
+    beds: 0,
+    bathrooms: 0,
+    rating: false,
+    typeOfHousing: [],
+    offeredAmenitiesDTO: offeredAmenities,
+    hostsLanguage: [],
+  };
+  const user = {
+    ...data,
+    filter: userFilter,
+  };
+  await users.updateOne(filter, { $set: user }, { upsert: true });
+}
+
+export async function fetchFilterNecessary(chat, selectedValues) {
+  const userFilter = {
+    typeOfAccommodation: "Будь-який",
+    minimumPrice: 0,
+    maximumPrice: 800,
+    bedrooms: 0,
+    beds: 0,
+    bathrooms: 0,
+    rating: false,
+    typeOfHousing: [],
+    offeredAmenitiesDTO: selectedValues,
+    hostsLanguage: [],
+  };
+  const res = await getFilter(userFilter);
+  return res;
 }

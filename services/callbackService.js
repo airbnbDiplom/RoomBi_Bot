@@ -9,6 +9,8 @@ import {
   theMostNecessary,
   filterFilterFind,
   filterFinish,
+  filterGetTopRating,
+  filterNecessary,
 } from "../function/callbackQueryFunction.js";
 
 function getChoice(data) {
@@ -29,6 +31,8 @@ function getChoiceCase(data) {
   else if (data.includes("search_by_criteria")) return "search_by_criteria";
   else if (data.includes("NyNext")) return "NyNext";
   else if (data.includes("FilterFind")) return "FilterFind";
+  else if (data.includes("apartment_rating")) return "apartment_rating";
+  else if (data.includes("location")) return "location";
   else return "Not found";
 }
 export async function myCallbackQuery(query, bot) {
@@ -38,7 +42,8 @@ export async function myCallbackQuery(query, bot) {
   } = query;
   let сhoiceCase = getChoiceCase(data);
   const dataNecessary = data;
-
+  console.log("сhoiceCase - ", сhoiceCase);
+  console.log("data - ", data);
   switch (сhoiceCase) {
     case "what_is_your_name":
       await whatYourName(chat, bot);
@@ -69,6 +74,13 @@ export async function myCallbackQuery(query, bot) {
     case "FilterFind":
       await filterFinish(chat, bot);
       break;
+    case "location":
+      const location = getChoice(data);
+      //   await filterGetLocation(chat, bot, location);
+      break;
+    case "apartment_rating":
+      await filterGetTopRating(chat, bot);
+      break;
     case "search_by_criteria":
       await searchByCriteria(chat, bot);
       break;
@@ -77,7 +89,7 @@ export async function myCallbackQuery(query, bot) {
 
       break;
     case "NyNext":
-      await bot.sendMessage(chat.id, `RoomBi_Bot`);
+      await filterNecessary(chat, bot);
       break;
     default:
       await bot.sendMessage(chat.id, `RoomBi_Bot`);

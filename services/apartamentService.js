@@ -24,6 +24,7 @@ export const getFilter = async (filter) => {
       hostsLanguage: filter.hostsLanguage,
     }),
   });
+  console.log("Filter - ", filter);
   if (!response.ok) {
     console.error("getFilter", response);
     throw new Error("Unable to fetch getFilter.");

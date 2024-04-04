@@ -25,6 +25,12 @@ export const inlineKeyboardMenu = [
       callback_data: "search_by_criteria",
     },
   ],
+  [
+    {
+      text: "Топ апартаменти",
+      callback_data: "apartment_rating",
+    },
+  ],
 ];
 
 export const inlineKeyboardTypeOfAccommodation = [
@@ -258,10 +264,6 @@ export const inlineKeyboardTheMostNecessary = [
     { text: "🧯 Вогнегасник ", callback_data: "Necessary fireExtinguisher" },
   ],
   [
-    { text: "🅿 Безкоштовна парковка ", callback_data: "Necessary freeParking" },
-    { text: "🅿 Платна парковка ", callback_data: "Necessary paidParking" },
-  ],
-  [
     { text: "🏊‍♀️ Басейн ", callback_data: "Necessary pool" },
     { text: "🍥 Джакузі ", callback_data: "Necessary jacuzzi" },
   ],
@@ -273,16 +275,12 @@ export const inlineKeyboardTheMostNecessary = [
     { text: "🔥 Вогнище ", callback_data: "Necessary firePit" },
     { text: "🎇 Камін ", callback_data: "Necessary fireplace" },
   ],
+  [{ text: "🚿 Зовнішній душ ", callback_data: "Necessary outdoorShower" }],
   [
     {
       text: "⛹️‍♂️ Тренажерне обладнання ",
       callback_data: "Necessary gymEquipment",
     },
-    { text: "🚿 Зовнішній душ ", callback_data: "Necessary outdoorShower" },
-  ],
-  [
-    { text: "🎹 Фортепіано ", callback_data: "Necessary piano" },
-    { text: "🎱 Більярдний стіл ", callback_data: "Necessary poolTable" },
   ],
   [
     {
@@ -290,13 +288,27 @@ export const inlineKeyboardTheMostNecessary = [
       callback_data: "Necessary outdoorDiningArea",
     },
   ],
+  [{ text: "🚬 Детектор диму ", callback_data: "Necessary smokeDetector" }],
   [
-    { text: "🚬 Детектор диму ", callback_data: "Necessary smokeDetector" },
     {
       text: "💨 Детектор чадного газу ",
       callback_data: "Necessary carbonMonoxideDetector",
     },
   ],
+  [
+    {
+      text: "🤽‍♀️ Доступ до пляжу ",
+      callback_data: "Necessary beachAccess",
+    },
+  ],
+
+  [{ text: "🅿 Безкоштовна парковка ", callback_data: "Necessary freeParking" }],
+  [{ text: "🅿 Платна парковка ", callback_data: "Necessary paidParking" }],
+  [
+    { text: "🎹 Фортепіано ", callback_data: "Necessary piano" },
+    { text: "🎱 Більярдний стіл ", callback_data: "Necessary poolTable" },
+  ],
+
   [
     {
       text: "🌊 Доступ до озера ",
@@ -307,13 +319,8 @@ export const inlineKeyboardTheMostNecessary = [
       callback_data: "Necessary skiInOut",
     },
   ],
-  [
-    {
-      text: "🤽‍♀️ Доступ до пляжу ",
-      callback_data: "Necessary beachAccess",
-    },
-    { text: "⏭ Далі", callback_data: "NyNext" },
-  ],
+
+  [{ text: "🔎 Пошук 🔍", callback_data: "NyNext" }],
 ];
 
 // export const inlineKeyboardCharacteristics = [
