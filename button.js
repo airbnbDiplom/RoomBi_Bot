@@ -33,22 +33,22 @@ export const inlineKeyboardMenu = [
   ],
 ];
 
-export const inlineKeyboardTypeOfAccommodation = [
+export const inlineKeyboardTypeAccommodation = [
   [
     {
       text: "Кімната",
-      callback_data: "TypeOfAccommodation Кімната",
+      callback_data: "TypeAccommodation Кімната",
     },
 
     {
       text: "Будь-який",
-      callback_data: "TypeOfAccommodation Будь-який",
+      callback_data: "TypeAccommodation Будь-який",
     },
   ],
   [
     {
       text: "Повне проживання",
-      callback_data: "TypeOfAccommodation Повне проживання",
+      callback_data: "TypeAccommodation Повне проживання",
     },
   ],
 ];

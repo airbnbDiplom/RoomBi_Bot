@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+
 export const getFilter = async (filter) => {
   const url = process.env.URL_FILTER;
   if (!url) {
@@ -24,41 +25,35 @@ export const getFilter = async (filter) => {
       hostsLanguage: filter.hostsLanguage,
     }),
   });
-  console.log("Filter - ", filter);
+  console.log("Filter - і", filter);
+
   if (!response.ok) {
-    console.error("getFilter", response);
-    throw new Error("Unable to fetch getFilter.");
+    console.log("Error getFilter");
+    return [];
   }
 
-  return response.json();
+  const res = await response.json();
+  return res;
 };
 
-// typeOfHousing: ["Rooms", "Houses", "Countryhouses", "Floatinghouses"];
-// offeredAmenitiesDTO: [
-//   "wiFi",
-//   "kitchen",
-//   "airConditioner",
-//   "firstAidKit",
-//   "fireExtinguisher",
-//   "workspace",
-//   "washingMachine",
-//   "tV",
-//   "innerYard",
-//   "pool",
-//   "freeParking",
-//   "paidParking",
-//   "jacuzzi",
-//   "bBQArea",
-//   "firePit",
-//   "fireplace",
-//   "gymEquipment",
-//   "outdoorShower",
-//   "piano",
-//   "poolTable",
-//   "outdoorDiningArea",
-//   "lakeAccess",
-//   "skiInOut",
-//   "beachAccess",
-//   "smokeDetector",
-//   "carbonMonoxideDetector",
-// ];
+export const getLocation = async (ing, lat) => {
+  const url = process.env.URL_LOCATION;
+  if (!url) {
+    throw new Error("URL_LOCATION is undefined.");
+  }
+
+  const response = await fetch(`${url}?ingMap=${ing}&latMap=${lat}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  });
+
+  if (!response.ok) {
+    console.log("Error getLocation");
+    return [];
+  }
+  const res = await response.json();
+  return res;
+};

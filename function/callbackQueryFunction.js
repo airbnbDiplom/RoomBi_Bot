@@ -1,6 +1,6 @@
 import {
   inlineKeyboardMenu,
-  inlineKeyboardTypeOfAccommodation,
+  inlineKeyboardTypeAccommodation,
   inlineKeyboardPricesPerNight,
   inlineKeyboardNumberOfBedrooms,
   inlineKeyboardNumberOfBeds,
@@ -8,9 +8,10 @@ import {
   inlineKeyboardTheMostNecessary,
   inlineKeyboardFilterFind,
 } from "../button.js";
+import { getLocation } from "../services/apartamentService.js";
 
 import {
-  fetchUserTypeOfAccommodation,
+  fetchUserTypeAccommodation,
   fetchUserNumberOfBedrooms,
   fetchUserNumberOfBeds,
   fetchUserNumberOfBathrooms,
@@ -25,7 +26,7 @@ import {
 export async function filterStart(chat, bot) {
   await bot.sendMessage(chat.id, `Оберіть тип розміщення`, {
     reply_markup: {
-      inline_keyboard: inlineKeyboardTypeOfAccommodation,
+      inline_keyboard: inlineKeyboardTypeAccommodation,
     },
   });
 }
@@ -41,12 +42,8 @@ export async function whatYourName(chat, bot) {
   );
 }
 
-export async function filterTypeOfAccommodation(
-  chat,
-  bot,
-  typeOfAccommodation
-) {
-  await fetchUserTypeOfAccommodation(chat, typeOfAccommodation);
+export async function filterTypeAccommodation(chat, bot, typeAccommodation) {
+  await fetchUserTypeAccommodation(chat, typeAccommodation);
   await bot.sendMessage(chat.id, `Виберіть діапазон цін за день 💵`, {
     reply_markup: {
       inline_keyboard: inlineKeyboardPricesPerNight,
@@ -88,13 +85,27 @@ export async function filterFilterFind(chat, bot, bathrooms) {
   });
 }
 export async function filterFinish(chat, bot) {
-  const result = await fetchFilterFinishDb(chat);
-  await imageWithText(result, chat, bot);
+  try {
+    let result = await fetchFilterFinishDb(chat);
+    if (!result) {
+      result = [];
+    }
+
+    await imageWithText(result, chat, bot);
+    console.log("result.length - ", result.length);
+    return result.length;
+  } catch {
+    await errorServer();
+  }
 }
 
 export async function filterGetTopRating(chat, bot) {
-  const result = await fetchFilterFinishRatingDb(chat);
-  await imageWithText(result, chat, bot);
+  try {
+    const result = await fetchFilterFinishRatingDb(chat);
+    await imageWithText(result, chat, bot);
+  } catch {
+    await errorServer();
+  }
 }
 async function imageWithText(result, chat, bot) {
   try {
@@ -137,7 +148,7 @@ export async function searchByCriteria(chat, bot) {
   });
 }
 
-async function downloadImage(url) {
+export async function downloadImage(url) {
   const response = await fetch(url, {
     method: "GET",
     responseType: "arraybuffer",
@@ -176,43 +187,94 @@ async function sendImageWithText(
 }
 
 export async function theMostNecessary(chat, bot, message_id, dataNecessary) {
-  let selectedValues = await fetchGetOfferedAmenitiesDTODb(chat);
-  // Перевіряємо, чи selectedValues не є null або undefined, і якщо так, ініціалізуємо його порожнім масивом
-  if (!selectedValues) {
-    selectedValues = [];
+  try {
+    let selectedValues = await fetchGetOfferedAmenitiesDTODb(chat);
+    // Перевіряємо, чи selectedValues не є null або undefined, і якщо так, ініціалізуємо його порожнім масивом
+    if (!selectedValues) {
+      selectedValues = [];
+    }
+    if (selectedValues.includes(dataNecessary)) {
+      const index = selectedValues.indexOf(dataNecessary);
+      selectedValues.splice(index, 1); // Видаляємо значення, якщо воно вже присутнє
+    } else {
+      selectedValues.push(dataNecessary); // Додаємо значення, якщо його немає
+    }
+
+    const buttons = inlineKeyboardTheMostNecessary.map((row) =>
+      row.map((btn) => ({
+        text:
+          btn.text + (selectedValues.includes(btn.callback_data) ? " ✅" : ""),
+        callback_data: btn.callback_data,
+      }))
+    );
+
+    await fetchSetOfferedAmenitiesDTODb(chat, selectedValues);
+
+    bot.editMessageText("Оберіть критерії:", {
+      chat_id: chat.id,
+      message_id: message_id,
+      reply_markup: {
+        inline_keyboard: buttons,
+      },
+    });
+  } catch {
+    await errorServer();
   }
-  if (selectedValues.includes(dataNecessary)) {
-    const index = selectedValues.indexOf(dataNecessary);
-    selectedValues.splice(index, 1); // Видаляємо значення, якщо воно вже присутнє
-  } else {
-    selectedValues.push(dataNecessary); // Додаємо значення, якщо його немає
-  }
-
-  const buttons = inlineKeyboardTheMostNecessary.map((row) =>
-    row.map((btn) => ({
-      text:
-        btn.text + (selectedValues.includes(btn.callback_data) ? " ✅" : ""),
-      callback_data: btn.callback_data,
-    }))
-  );
-
-  await fetchSetOfferedAmenitiesDTODb(chat, selectedValues);
-
-  bot.editMessageText("Оберіть критерії:", {
-    chat_id: chat.id,
-    message_id: message_id,
-    reply_markup: {
-      inline_keyboard: buttons,
-    },
-  });
 }
 
 export async function filterNecessary(chat, bot) {
-  let selectedValues = await fetchGetOfferedAmenitiesDTODb(chat);
-  const modifiedAmenities = selectedValues.map((item) =>
-    item.replace("Necessary ", "")
+  try {
+    let selectedValues = await fetchGetOfferedAmenitiesDTODb(chat);
+    const modifiedAmenities = selectedValues.map((item) =>
+      item.replace("Necessary ", "")
+    );
+    let result = await fetchFilterNecessary(chat, modifiedAmenities);
+    if (!result) {
+      result = [];
+    }
+    await imageWithText(result, chat, bot);
+    return result.length;
+  } catch {
+    await errorServer();
+  }
+}
+
+export async function getLocationButton(chat, bot) {
+  await bot.sendMessage(
+    chat.id,
+    `Натисніть ( Відправити місце знаходження 👇 ) для отримання найближчих апартаментів`,
+    {
+      reply_markup: {
+        keyboard: [
+          [
+            {
+              text: "Відправити місце знаходження",
+              request_location: true,
+            },
+          ],
+        ],
+        one_time_keyboard: true,
+      },
+    }
   );
-  const result = await fetchFilterNecessary(chat, modifiedAmenities);
-  console.log("result 3 - ", result);
-  await imageWithText(result, chat, bot);
+}
+
+export async function filterLocationCard(chat, bot, ing, lat) {
+  try {
+    let result = await getLocation(ing, lat);
+    if (!result) {
+      result = [];
+    }
+    await imageWithText(result, chat, bot);
+    return result.length;
+  } catch {
+    await errorServer();
+  }
+}
+
+async function errorServer() {
+  await bot.sendMessage(
+    chat.id,
+    `Сервер не відповідає ведуться тимчасові роботи. Вибачте за не зручності 😥`
+  );
 }

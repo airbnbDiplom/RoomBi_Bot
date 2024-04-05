@@ -3,6 +3,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { COMMANDS } from "./command.js";
 import { myMessage } from "./services/servicesMessage.js";
 import { myCallbackQuery } from "./services/callbackService.js";
+import { filterLocationCard } from "./function/callbackQueryFunction.js";
 dotenv.config();
 const bot = new TelegramBot(process.env.TG_TOKEN, {
   webHook: {
@@ -19,4 +20,15 @@ bot.on("callback_query", async (query) => {
 
 bot.on("message", async (msg) => {
   await myMessage(msg, bot);
+});
+bot.on("location", async (msg) => {
+  const latitude = msg.location.latitude;
+  const longitude = msg.location.longitude;
+  await bot.sendMessage(msg.chat.id, `Результат пошуку.`, {
+    reply_markup: {
+      remove_keyboard: true,
+    },
+  });
+  const length = await filterLocationCard(msg.chat, bot, latitude, longitude);
+  await bot.sendMessage(msg.chat.id, `Найближчі ${length} об'єктів.`);
 });

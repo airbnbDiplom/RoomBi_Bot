@@ -2,21 +2,18 @@ import mongo from "../mongodb/mongodb.js";
 import { getFilter } from "./apartamentService.js";
 const users = mongo.db("Telegram").collection("Users");
 
-export async function fetchUserTypeOfAccommodation(data, typeOfAccommodation) {
+export async function fetchUserTypeAccommodation(data, typeAccommodation) {
   const filter = { id: data.id };
   const oldUser = await users.findOne(filter);
   const userFilter = {
     ...oldUser.filter,
-    typeOfAccommodation,
+    typeAccommodation,
   };
   const user = {
     ...data,
     filter: userFilter,
   };
 
-  console.log("data у - ", user.filter);
-  // const result = await users.deleteOne(filter);
-  // console.log("deletedCount - ", result.deletedCount);
   await users.updateOne(filter, { $set: user }, { upsert: true });
   return await users.findOne(filter);
 }
@@ -93,14 +90,12 @@ export async function fetchFilterFinishDb(data) {
     offeredAmenitiesDTO,
     hostsLanguage,
   };
-  //   console.log("userFilter e- ", userFilter);
   const res = await getFilter(userFilter);
-  //   console.log("res e- ", res);
   return res;
 }
 export async function fetchFilterFinishRatingDb(data) {
   const userFilter = {
-    typeOfAccommodation: "Будь-який",
+    typeAccommodation: "Будь-який",
     minimumPrice: 0,
     maximumPrice: 800,
     bedrooms: 0,
@@ -120,7 +115,7 @@ export async function fetchStart(data) {
   const user = {
     ...data,
     filter: {
-      typeOfAccommodation: "Будь-який", //Any,FullHouses,Room
+      typeAccommodation: "Будь-який", //Any,FullHouses,Room
       minimumPrice: 0, //мінімальна ціна
       maximumPrice: 100, //максимальна ціна
       bedrooms: 0, //Спальні
@@ -144,7 +139,7 @@ export async function fetchGetOfferedAmenitiesDTODb(data) {
 export async function fetchSetOfferedAmenitiesDTODb(data, offeredAmenities) {
   const filter = { id: data.id };
   const userFilter = {
-    typeOfAccommodation: "Будь-який",
+    typeAccommodation: "Будь-який",
     minimumPrice: 0,
     maximumPrice: 800,
     bedrooms: 0,
@@ -164,7 +159,7 @@ export async function fetchSetOfferedAmenitiesDTODb(data, offeredAmenities) {
 
 export async function fetchFilterNecessary(chat, selectedValues) {
   const userFilter = {
-    typeOfAccommodation: "Будь-який",
+    typeAccommodation: "Будь-який",
     minimumPrice: 0,
     maximumPrice: 800,
     bedrooms: 0,

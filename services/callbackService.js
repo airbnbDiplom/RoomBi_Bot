@@ -1,7 +1,7 @@
 import {
   filterStart,
   whatYourName,
-  filterTypeOfAccommodation,
+  filterTypeAccommodation,
   filterNumberOfBedrooms,
   filterNumberOfBeds,
   filterNumberOfBathrooms,
@@ -11,6 +11,7 @@ import {
   filterFinish,
   filterGetTopRating,
   filterNecessary,
+  getLocationButton,
 } from "../function/callbackQueryFunction.js";
 
 function getChoice(data) {
@@ -20,7 +21,7 @@ function getChoice(data) {
 }
 function getChoiceCase(data) {
   if (data.includes("Necessary")) return "Necessary";
-  else if (data.includes("TypeOfAccommodation")) return "TypeOfAccommodation";
+  else if (data.includes("TypeAccommodation")) return "TypeAccommodation";
   else if (data.includes("PricesPerNight")) return "PricesPerNight";
   else if (data.includes("NumberOfBedrooms")) return "NumberOfBedrooms";
   else if (data.includes("NumberOfBeds")) return "NumberOfBeds";
@@ -51,9 +52,9 @@ export async function myCallbackQuery(query, bot) {
     case "filter":
       await filterStart(chat, bot);
       break;
-    case "TypeOfAccommodation": //тип розміщення
-      const typeOfAccommodation = getChoice(data);
-      await filterTypeOfAccommodation(chat, bot, typeOfAccommodation);
+    case "TypeAccommodation": //тип розміщення
+      const typeAccommodation = getChoice(data);
+      await filterTypeAccommodation(chat, bot, typeAccommodation);
       break;
     case "PricesPerNight": // діапазон цін за день
       const pricesPerNight = getChoice(data);
@@ -72,11 +73,14 @@ export async function myCallbackQuery(query, bot) {
       await filterFilterFind(chat, bot, numberOfBathrooms);
       break;
     case "FilterFind":
-      await filterFinish(chat, bot);
+      const length = await filterFinish(chat, bot);
+      await bot.sendMessage(
+        chat.id,
+        `За вашим запитом знайдено ${length} об'єктів.`
+      );
       break;
-    case "location":
-      const location = getChoice(data);
-      //   await filterGetLocation(chat, bot, location);
+    case "nearest_apartments":
+      await getLocationButton(chat, bot);
       break;
     case "apartment_rating":
       await filterGetTopRating(chat, bot);
@@ -86,10 +90,13 @@ export async function myCallbackQuery(query, bot) {
       break;
     case "Necessary":
       await theMostNecessary(chat, bot, message_id, dataNecessary);
-
       break;
     case "NyNext":
-      await filterNecessary(chat, bot);
+      const lengthNecessary = await filterNecessary(chat, bot);
+      await bot.sendMessage(
+        chat.id,
+        `За вашим запитом знайдено ${lengthNecessary} об'єктів.`
+      );
       break;
     default:
       await bot.sendMessage(chat.id, `RoomBi_Bot`);
