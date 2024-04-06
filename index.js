@@ -14,14 +14,13 @@ const bot = new TelegramBot(process.env.TG_TOKEN, {
 bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
 bot.setMyCommands(COMMANDS);
 
-// Функція, яка виконується кожні 5 хвилин
+// Функція, яка виконується кожні 30 хвилин
 const keepServerAlive = async () => {
-  await bot.sendMessage("148848801", `\nЯ не сплю.`);
   console.log("Server is awake!");
+  await bot.sendMessage("148848801", `\nЯ не сплю.`);
 };
 
-// Запуск функції кожні 5 хвилин
-setInterval(keepServerAlive, 1800000); // 300000 мілісекунд = 5 хвилин
+setInterval(keepServerAlive, 1800000); // 1800000 мілісекунд = 30 хвилин
 
 bot.on("callback_query", async (query) => {
   await myCallbackQuery(query, bot);
