@@ -12,10 +12,16 @@ const bot = new TelegramBot(process.env.TG_TOKEN, {
   },
 });
 bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
-// bot.setWebHook(
-//   `https://api.render.com/deploy/srv-co4i1ea1hbls73bteiv0?key=${process.env.KEY}/bot${process.env.TG_TOKEN}`
-// );
 bot.setMyCommands(COMMANDS);
+
+// Функція, яка виконується кожні 5 хвилин
+const keepServerAlive = async () => {
+  // Тут можна додати дії, які виконуються періодично
+  console.log("Server is awake!");
+};
+
+// Запуск функції кожні 5 хвилин
+setInterval(keepServerAlive, 300000); // 300000 мілісекунд = 5 хвилин
 
 bot.on("callback_query", async (query) => {
   await myCallbackQuery(query, bot);
