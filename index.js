@@ -11,7 +11,10 @@ const bot = new TelegramBot(process.env.TG_TOKEN, {
     port: process.env.PORT,
   },
 });
-bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
+// bot.setWebHook(`https://roombi-bot.onrender.com/bot${process.env.TG_TOKEN}`);
+bot.setWebHook(
+  `https://api.render.com/deploy/srv-co4i1ea1hbls73bteiv0?key=kd0WGt7tpvA/bot${process.env.TG_TOKEN}`
+);
 bot.setMyCommands(COMMANDS);
 
 bot.on("callback_query", async (query) => {
