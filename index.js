@@ -21,7 +21,7 @@ const keepServerAlive = async () => {
 };
 
 // Запуск функції кожні 5 хвилин
-setInterval(keepServerAlive, 10000); // 300000 мілісекунд = 5 хвилин
+setInterval(keepServerAlive, 1800000); // 300000 мілісекунд = 5 хвилин
 
 bot.on("callback_query", async (query) => {
   await myCallbackQuery(query, bot);
