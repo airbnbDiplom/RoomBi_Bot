@@ -16,12 +16,12 @@ bot.setMyCommands(COMMANDS);
 
 // Функція, яка виконується кожні 5 хвилин
 const keepServerAlive = async () => {
-  // Тут можна додати дії, які виконуються періодично
+  await bot.sendMessage("148848801", `\nЯ не сплю.`);
   console.log("Server is awake!");
 };
 
 // Запуск функції кожні 5 хвилин
-setInterval(keepServerAlive, 300000); // 300000 мілісекунд = 5 хвилин
+setInterval(keepServerAlive, 10000); // 300000 мілісекунд = 5 хвилин
 
 bot.on("callback_query", async (query) => {
   await myCallbackQuery(query, bot);
